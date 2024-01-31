@@ -15,5 +15,9 @@ module DeviceReadings
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    # Load env variables file holding the API credentials
+    env_vars = File.join(Rails.root, 'config', 'env_variables.rb')
+    load(env_vars)
   end
 end
