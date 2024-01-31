@@ -125,6 +125,8 @@ value: {
 }
 ```
 
+Timestamps are all stored in UTC format. I wanted the times to be consistent across the board, since there is no guarantee of timezone from our requests.
+
 This format allows us to:
 - check for duplicate timestamps in O(1) time
 - check for latest_timestamp in O(1) time
@@ -162,6 +164,41 @@ In a production application, we would want a more robust setup. Authentication c
 
 I tried to keep the controllers thin and move reusable logic elsewhere (e.g. in a service, in the model, etc.)
 
+#### Responses
+
+I formatted the responses to return a 207 if some of our readings could not be stored. This will happen if validations fail, e.g.:
+- timestamp is not a valid timestamp
+- there are duplicate timestamps
+- count is not greater than or equal to 0
+
+A sample response looks like:
+
+```
+{
+  "id": "id",
+  "successful": [
+    {
+      "timestamp": "2021-01-29T16:08:15+01:00",
+      "count": 2
+    }
+  ],
+  "failed": [
+    {
+      "timestamp": "a",
+      "count": -600,
+      "errors": {
+          "count": [
+              "must be greater than or equal to 0"
+          ],
+          "timestamp": [
+              "is not a valid timestamp"
+          ]
+      }
+    }
+  ]
+```
+
+If there are no issues, and all the timestamps can be inserted into memory, we return a 201.
 
 ## Thank You
 
