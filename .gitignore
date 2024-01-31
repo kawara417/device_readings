@@ -32,3 +32,6 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+# Ignore credentials file for holding API username / password
+/config/env_variables.rb
